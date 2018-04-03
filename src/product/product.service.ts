@@ -9,20 +9,20 @@ export class ProductService {
     
   constructor(
     @InjectRepository(Product)
-    private readonly photoRepository: Repository<Product>,
+    private readonly productRepository: Repository<Product>,
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
     let _product = new Product();
     Object.assign(_product, product);
-    return await this.photoRepository.save(_product);
+    return await this.productRepository.save(_product);
   }
 
   async findAll(): Promise<Product[]> {
-    return await this.photoRepository.find();
+    return await this.productRepository.find();
   }
 
   async findById(id: number): Promise<Product> {
-    return await this.photoRepository.findOneById(+id);
+    return await this.productRepository.findOneById(+id);
   }
 }

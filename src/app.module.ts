@@ -4,12 +4,14 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Feature modules
+import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    ProductModule
+    UserModule,
+    ProductModule,
   ],
   controllers: [AppController],
   components: [],
