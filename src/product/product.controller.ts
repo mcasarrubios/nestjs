@@ -6,7 +6,7 @@ import {
   UseGuards,
   ReflectMetadata,
   UseInterceptors,
-  Param,
+  Param
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
@@ -15,7 +15,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ADMIN_ROLE } from '../user/user.constants';
 import { LoggingInterceptor, TransformInterceptor } from '../common/interceptors/index';
-import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
+import { ParseIntPipe } from '../common/pipes/index';
 
 @Controller('products')
 @UseGuards(RolesGuard)
@@ -31,7 +31,6 @@ export class ProductController {
 
   @Get()
   async findAll(): Promise<Product[]> {
-  // async findAll(): Promise<any[]> {
     return this.productService.findAll();
   }
 

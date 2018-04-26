@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Feature modules
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     UserModule,
+    AuthModule,
     ProductModule,
   ],
   controllers: [AppController],

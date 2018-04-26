@@ -1,24 +1,28 @@
-import { HttpException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import {
   PipeTransform,
   Pipe,
   ArgumentMetadata,
   HttpStatus,
 } from '@nestjs/common';
-import { validate } from 'class-validator';
+import { validate, ValidatorOptions } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 @Pipe()
 export class ValidationPipe implements PipeTransform<any> {
+  
+  constructor(private _validatorOptions: ValidatorOptions) {}
+
   async transform(value, metadata: ArgumentMetadata) {
     const { metatype } = metadata;
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
     const object = plainToClass(metatype, value);
-    const errors = await validate(object);
+    const errors = await validate(object, this._validatorOptions);
     if (errors.length > 0) {
-      throw new HttpException('Validation failed', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(
+        `Validation failed in following fields: ${errors.map(err => err.property)}`);
     }
     return value;
   }
