@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   Param,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
@@ -18,12 +19,12 @@ import { LoggingInterceptor, TransformInterceptor } from '../common/interceptors
 import { ParseIntPipe } from '../common/pipes/index';
 
 @Controller('products')
-@UseGuards(RolesGuard)
 @UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(UserRole.admin)
   async create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
