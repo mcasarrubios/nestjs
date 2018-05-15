@@ -1,14 +1,18 @@
-import { Interceptor, NestInterceptor, ExecutionContext } from '@nestjs/common';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Injectable, NestInterceptor, ExecutionContext } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Interceptor()
-export class TransformInterceptor implements NestInterceptor {
+export interface Response<T> {
+  data: T;
+}
+
+@Injectable()
+export class TransformInterceptor<T>
+  implements NestInterceptor<T, Response<T>> {
   intercept(
-    dataOrRequest,
     context: ExecutionContext,
-    stream$: Observable<any>,
-  ): Observable<any> {
-    return stream$.map(data => ({ data }));
+    call$: Observable<T>,
+  ): Observable<Response<T>> {
+    return call$.pipe(map(data => ({ data })));
   }
 }

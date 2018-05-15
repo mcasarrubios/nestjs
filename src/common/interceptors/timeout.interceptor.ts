@@ -1,16 +1,13 @@
 import { Injectable, NestInterceptor, ExecutionContext } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Injectable()
-export class CacheInterceptor implements NestInterceptor {
+export class TimeoutInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
     call$: Observable<any>,
   ): Observable<any> {
-    const isCached = true;
-    if (isCached) {
-      return of([]);
-    }
-    return call$;
+    return call$.pipe(timeout(5000));
   }
 }

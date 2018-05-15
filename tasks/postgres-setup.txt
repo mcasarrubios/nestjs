@@ -1,0 +1,12 @@
+# CREATE DB AND USER
+sudo -u postgres createdb nestjs
+sudo -u postgres createuser devuser
+
+# SET PRIVILIGES AND PASSWORD
+sudo -u postgres psql
+postgres=# grant all privileges on database nestjs to devuser;
+postgres=# alter user devuser with encrypted password 'q12345';
+
+# RUN SCRIPT TO CREATE TABLES
+postgres=# \c nestjs
+postgres=# \i ./tasks/postgres-create.sql

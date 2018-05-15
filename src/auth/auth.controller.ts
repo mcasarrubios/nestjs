@@ -12,8 +12,4 @@ export class AuthController {
     return await this.authService.createToken(createAuthTokenDto);
   }
 
-  @Get('authorized')
-  public async authorized() {
-    console.log('Authorized route...');
-  }
 }

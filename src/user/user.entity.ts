@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Contains, IsInt, Length, IsEmail, IsFQDN, IsDate, Min, Max } from "class-validator";
-import { USER_ROLE } from './user.constants';
+import { Contains, IsInt, Length, IsEmail, IsFQDN, IsDate, Min, Max } from 'class-validator';
+import { UserRoles } from './user.constants';
 
 @Entity()
 export class User {
@@ -10,7 +10,7 @@ export class User {
   @Column({
     name: 'email',
     length: 100,
-    unique: true
+    unique: true,
   })
   email: string;
 
@@ -20,11 +20,9 @@ export class User {
   @Column({ length: 50 })
   lastName: string;
 
-  @Column({
-    nullable: false,
-    type: String,
+  @Column('enum', {
+    enum: UserRoles,
     array: true,
-    default: `{${USER_ROLE}}`,
   })
   roles: string[];
 

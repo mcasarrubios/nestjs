@@ -1,27 +1,22 @@
 import {
-  Interceptor,
+  Injectable,
   NestInterceptor,
   ExecutionContext,
   HttpStatus,
 } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-@Interceptor()
-export class ExceptionInterceptor implements NestInterceptor {
+@Injectable()
+export class ErrorsInterceptor implements NestInterceptor {
   intercept(
-    dataOrRequest,
     context: ExecutionContext,
-    stream$: Observable<any>,
+    call$: Observable<any>,
   ): Observable<any> {
-    return stream$.catch(err =>
-      Observable.throw(
-        new HttpException(
-          'Exception interceptor message',
-          HttpStatus.BAD_GATEWAY,
-        ),
+    return call$.pipe(
+      catchError(err =>
+        throwError(new HttpException('Message', HttpStatus.BAD_GATEWAY)),
       ),
     );
   }
