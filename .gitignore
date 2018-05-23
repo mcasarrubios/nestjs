@@ -3,3 +3,4 @@ dist
 tmp
 temp
 .DS_Store
+logs/*.log
