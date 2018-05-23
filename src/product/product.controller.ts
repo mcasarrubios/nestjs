@@ -7,6 +7,7 @@ import {
   ReflectMetadata,
   UseInterceptors,
   Param,
+  ParseIntPipe
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -15,11 +16,8 @@ import { Product } from './product.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../user/user.constants';
-import { LoggingInterceptor, TransformInterceptor } from '../common/interceptors/index';
-import { ParseIntPipe } from '../common/pipes/index';
 
 @Controller('products')
-@UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 

@@ -1,7 +1,11 @@
-import { Module, NestModule, MiddlewaresConsumer } from '@nestjs/common';
-import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './common/interceptors/index';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+// Common services
+import { ErrorHandler, Logger } from './common/services/index';
 
 // Feature modules
 import { UserModule } from './user/user.module';
@@ -16,13 +20,13 @@ import { ProductModule } from './product/product.module';
     ProductModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    ErrorHandler,
+    Logger,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    }
+  ]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewaresConsumer): void {
-    consumer
-      .apply(LoggerMiddleware)
-      .with('ApplicationModule')
-      .forRoutes(AppController);
-  }
-}
+export class AppModule {}

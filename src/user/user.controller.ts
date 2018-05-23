@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   Param,
   Req,
+  ParseIntPipe
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,11 +17,8 @@ import { User } from './user.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from './user.constants';
-import { LoggingInterceptor, TransformInterceptor } from '../common/interceptors/index';
-import { ParseIntPipe } from '../common/pipes/index';
 
 @Controller('users')
-@UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
