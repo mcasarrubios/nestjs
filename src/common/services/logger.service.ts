@@ -1,23 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
+const { combine, timestamp, simple, json, colorize } = winston.format;
 
 @Injectable()
 export class Logger implements LoggerService {
 
     private _logger: winston.LoggerInstance;
+    private _colors: winston.AbstractConfigSetColors = {
+        error: 'red',
+        warn: 'yellow',
+        info: 'white',
+        verbose: 'green',
+        debug: 'blue',
+        silly: 'grey'
+    };
 
     constructor() {
         this._logger = new winston.createLogger({
             level: 'info',
-            format: winston.format.json(),
             transports: [
                 //
                 // - Write to all logs with level `info` and below to `combined.log` 
                 // - Write all logs error (and below) to `error.log`.
                 //
-                new winston.transports.File({ name: 'ErrorFile', filename: 'logs/error.log', level: 'error' }),
-                new winston.transports.File({ name: 'CombinedFile', filename: 'logs/combined.log' })
+                new winston.transports.File({
+                    name: 'ErrorFile',
+                    filename: 'logs/error.log',
+                    level: 'error',
+                    format: combine(timestamp(), json())
+                }),
+                new winston.transports.File({
+                    name: 'CombinedFile',
+                    filename: 'logs/combined.log',
+                    format: combine(timestamp(), json())
+                })
             ]
         });
 
@@ -27,18 +44,18 @@ export class Logger implements LoggerService {
         // 
         if (process.env.NODE_ENV !== 'production') {
             this._logger.add(new winston.transports.Console({
-                format: winston.format.simple()
+                format: combine(colorize(), timestamp(), simple())
             }));
         }
     }
 
-    log(message: string) {
+    async log(message: string) {
         this._logger.info(message);
     }
-    error(message: string, trace: string) {
+    async error(message: string, trace: string) {
         this._logger.error(message);
     }
-    warn(message: string) {
+    async warn(message: string) {
         this._logger.warn(message);
     }
 }
