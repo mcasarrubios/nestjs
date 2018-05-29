@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
-const { combine, timestamp, simple, json, colorize } = winston.format;
+const { 
+    combine, timestamp, simple,
+    json, colorize, handleExceptions,
+    humanReadableUnhandledException
+} = winston.format;
 
 @Injectable()
 export class Logger implements LoggerService {
@@ -50,10 +54,10 @@ export class Logger implements LoggerService {
     }
 
     async log(message: string) {
-        this._logger.info(message);
+        return this._logger.info(message);
     }
-    async error(message: string, trace: string) {
-        this._logger.error(message);
+    async error(message: string, trace: any) {
+        this._logger.error(message, trace);
     }
     async warn(message: string) {
         this._logger.warn(message);

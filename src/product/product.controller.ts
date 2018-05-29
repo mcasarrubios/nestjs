@@ -38,6 +38,9 @@ export class ProductController {
     @Param('id', new ParseIntPipe())
     id,
   ): Promise<Product> {
+
+    console.log(id.aaa.bbb);
+
     return this.productService.findById(id);
   }
 }
