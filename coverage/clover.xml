@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1527766572958" clover="3.2.0">
+  <project timestamp="1527766572958" name="All files">
+    <metrics statements="61" coveredstatements="40" conditionals="117" coveredconditionals="58" methods="35" coveredmethods="14" elements="213" coveredelements="112" complexity="0" loc="61" ncloc="61" packages="2" files="4" classes="4">
+      <package name="src">
+        <metrics statements="13" coveredstatements="12" conditionals="34" coveredconditionals="20" methods="4" coveredmethods="4"/>
+        <file name="app.controller.ts" path="/Users/mugi/Documents/workspace/_spikes/nestjs-example/src/app.controller.ts">
+          <metrics statements="13" coveredstatements="12" conditionals="34" coveredconditionals="20" methods="4" coveredmethods="4"/>
+          <line num="1" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="2" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="3" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="5" count="2" type="cond" truecount="3" falsecount="0"/>
+          <line num="7" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="8" count="4" type="cond" truecount="3" falsecount="1"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.common.services">
+        <metrics statements="48" coveredstatements="28" conditionals="83" coveredconditionals="38" methods="31" coveredmethods="10"/>
+        <file name="error.service.ts" path="/Users/mugi/Documents/workspace/_spikes/nestjs-example/src/common/services/error.service.ts">
+          <metrics statements="22" coveredstatements="9" conditionals="43" coveredconditionals="18" methods="16" coveredmethods="2"/>
+          <line num="1" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="2" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="3" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="5" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="7" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="10" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="11" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="12" count="0" type="stmt"/>
+          <line num="13" count="0" type="stmt"/>
+          <line num="14" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="15" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="22" count="0" type="stmt"/>
+          <line num="25" count="0" type="stmt"/>
+          <line num="26" count="0" type="stmt"/>
+          <line num="30" count="0" type="stmt"/>
+          <line num="38" count="0" type="stmt"/>
+          <line num="41" count="0" type="stmt"/>
+          <line num="44" count="0" type="stmt"/>
+          <line num="47" count="1" type="stmt"/>
+        </file>
+        <file name="index.ts" path="/Users/mugi/Documents/workspace/_spikes/nestjs-example/src/common/services/index.ts">
+          <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        </file>
+        <file name="logger.service.ts" path="/Users/mugi/Documents/workspace/_spikes/nestjs-example/src/common/services/logger.service.ts">
+          <metrics statements="26" coveredstatements="19" conditionals="40" coveredconditionals="20" methods="15" coveredmethods="8"/>
+          <line num="1" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="2" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="3" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="5" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="7" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="10" count="1" type="cond" truecount="2" falsecount="1"/>
+          <line num="11" count="1" type="cond" truecount="2" falsecount="0"/>
+          <line num="12" count="0" type="stmt"/>
+          <line num="13" count="0" type="stmt"/>
+          <line num="14" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="15" count="1" type="cond" truecount="2" falsecount="0"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="31" count="1" type="stmt"/>
+          <line num="47" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="48" count="1" type="stmt"/>
+          <line num="54" count="1" type="stmt"/>
+          <line num="55" count="1" type="stmt"/>
+          <line num="59" count="0" type="stmt"/>
+          <line num="60" count="0" type="stmt"/>
+          <line num="64" count="0" type="stmt"/>
+          <line num="65" count="0" type="stmt"/>
+          <line num="69" count="1" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>

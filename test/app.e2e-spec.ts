@@ -16,9 +16,10 @@ describe('AppController (e2e)', () => {
   });
 
   it('/GET /', () => {
+    const expectedData = { message: 'Hi, welcome to our amazing API!' };
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hi, welcome to our amazing API!');
+      .expect(expectedData);
   });
 });

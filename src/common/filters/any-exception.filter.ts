@@ -1,10 +1,15 @@
-import { ExceptionFilter, Catch, ArgumentsHost, Injectable } from '@nestjs/common';
+import { 
+  ExceptionFilter, Catch, 
+  ArgumentsHost, Injectable, 
+  HttpException, InternalServerErrorException,
+  ServiceUnavailableException
+} from '@nestjs/common';
 import { ErrorHandler } from '../services/index';
 
 @Injectable()
 @Catch()
 export class AnyExceptionFilter implements ExceptionFilter {
-  
+
   constructor(private _errorHandler: ErrorHandler) {}
   
   catch(exception: any, host: ArgumentsHost) {
@@ -12,23 +17,41 @@ export class AnyExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
+    const _exception = this._getException(exception);
+    exception.isOperational = this._isOperational(_exception);
+
+    const serverError =  !exception.isOperational ? 
+      new InternalServerErrorException():
+      _exception;
+
     response
-      .status(500)
-      .json({
-        statusCode: 500,
-        message: 'Internal server error',
+      .status(serverError.getStatus())
+      .json(Object.assign({
         timestamp: new Date().toISOString(),
-        path: request.url,
-      });
+        path: request.url
+      }, 
+        serverError.getResponse()
+      ));
 
     exception.data = Object.assign({}, exception.data, {
       path: request.url,
-      body: request.body
+      body: request.body,
+      method: request.method
     });
 
     this._errorHandler.handleError(exception);
     if (!this._errorHandler.isTrustedError(exception)) {
       process.exit(1);
     }
+  }
+
+  private _isOperational(exception) {
+    return exception instanceof HttpException;
+  }
+
+  private _getException(exception) {
+    if (exception.code === 'ECONNREFUSED') return new ServiceUnavailableException();
+    return exception;
+
   }
 }

@@ -8,7 +8,9 @@ import {
   UseInterceptors,
   Param,
   Req,
-  ParseIntPipe
+  ParseIntPipe,
+  UseFilters,
+  NotFoundException
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,9 +18,11 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { HttpExceptionFilter } from '../common/filters/index';
 import { UserRole } from './user.constants';
 
 @Controller('users')
+@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -49,7 +53,8 @@ export class UserController {
     @Param('id', new ParseIntPipe())
     id,
   ): Promise<User> {
-    return this.userService.findById(id);
+    const user = await this.userService.findById(id);
+    if (!user) throw new NotFoundException();
+    return user;
   }
-
 }

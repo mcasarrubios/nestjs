@@ -1,5 +1,5 @@
 import { Get, Controller, ExceptionFilter } from '@nestjs/common';
-import { Logger } from 'common/services/index';
+import { Logger } from './common/services/index';
 
 @Controller()
 export class AppController {

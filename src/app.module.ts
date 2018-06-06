@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Common
 import { ErrorHandler, Logger } from './common/services/index';
-import { AnyExceptionFilter } from './common/filters/index';
+import { AnyExceptionFilter, HttpExceptionFilter } from './common/filters/index';
 
 // Feature modules
 import { UserModule } from './user/user.module';
@@ -31,7 +31,7 @@ import { ProductModule } from './product/product.module';
     {
       provide: APP_FILTER,
       useClass: AnyExceptionFilter,
-    },
+    }
   ]
 })
 export class AppModule {}

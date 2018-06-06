@@ -1,3 +1,4 @@
+import { VError } from 'verror';
 import {
   Controller,
   Get,
@@ -7,7 +8,9 @@ import {
   ReflectMetadata,
   UseInterceptors,
   Param,
-  ParseIntPipe
+  ParseIntPipe,
+  UseFilters,
+  NotFoundException
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -15,9 +18,11 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { HttpExceptionFilter } from '../common/filters/index';
 import { UserRole } from '../user/user.constants';
 
 @Controller('products')
+// @UseFilters(new HttpExceptionFilter())
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -38,9 +43,15 @@ export class ProductController {
     @Param('id', new ParseIntPipe())
     id,
   ): Promise<Product> {
+    // try {
+      const product = await this.productService.findById(id);
+      if (!product) throw new NotFoundException();
+      return product;
+    // } catch(error) {
+    //   // const verror = new VError(error, 'Product/findOne');
+    //   // throw new ServiceUnavailableException(verror, verror.message);
 
-    console.log(id.aaa.bbb);
-
-    return this.productService.findById(id);
+    //   throw new ServiceUnavailableException();
+    // }
   }
 }
