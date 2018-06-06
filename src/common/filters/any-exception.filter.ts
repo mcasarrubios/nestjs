@@ -40,9 +40,6 @@ export class AnyExceptionFilter implements ExceptionFilter {
     });
 
     this._errorHandler.handleError(exception);
-    if (!this._errorHandler.isTrustedError(exception)) {
-      process.exit(1);
-    }
   }
 
   private _isOperational(exception) {
