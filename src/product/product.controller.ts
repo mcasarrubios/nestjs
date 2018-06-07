@@ -1,8 +1,8 @@
-import { VError } from 'verror';
 import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   UseGuards,
   ReflectMetadata,
@@ -17,12 +17,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
-import { HttpExceptionFilter } from '../common/filters/index';
+import { Roles } from '../common/decorators/index';
+import { CacheInterceptor } from '../common/interceptors/index';
 import { UserRole } from '../user/user.constants';
 
 @Controller('products')
-// @UseFilters(new HttpExceptionFilter())
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -39,19 +38,22 @@ export class ProductController {
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', new ParseIntPipe())
     id,
   ): Promise<Product> {
-    // try {
-      const product = await this.productService.findById(id);
-      if (!product) throw new NotFoundException();
-      return product;
-    // } catch(error) {
-    //   // const verror = new VError(error, 'Product/findOne');
-    //   // throw new ServiceUnavailableException(verror, verror.message);
+    const product = await this.productService.findById(id);
+    if (!product) throw new NotFoundException();
+    return product;
+  }
 
-    //   throw new ServiceUnavailableException();
-    // }
+  @Put(':id')
+  async updateOne(
+    @Param('id', new ParseIntPipe())
+    id,
+    @Body() updateProductDto: CreateProductDto
+  ): Promise<Product> {
+    return await this.productService.updateById(id, updateProductDto);
   }
 }

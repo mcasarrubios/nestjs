@@ -1,12 +1,12 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
-import { LoggingInterceptor } from './common/interceptors/index';
+import { LoggingInterceptor, CacheInterceptor } from './common/interceptors/index';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Common
-import { ErrorHandler, Logger } from './common/services/index';
-import { AnyExceptionFilter, HttpExceptionFilter } from './common/filters/index';
+import { CommonModule } from './common/common.module';
+import { AnyExceptionFilter } from './common/filters/index';
 
 // Feature modules
 import { UserModule } from './user/user.module';
@@ -15,6 +15,7 @@ import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
+    CommonModule,
     TypeOrmModule.forRoot(),
     UserModule,
     AuthModule,
@@ -22,8 +23,6 @@ import { ProductModule } from './product/product.module';
   ],
   controllers: [AppController],
   providers: [
-    ErrorHandler,
-    Logger,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

@@ -17,12 +17,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
-import { HttpExceptionFilter } from '../common/filters/index';
+import { Roles, CacheUser } from '../common/decorators';
+import { CacheInterceptor, CacheCleanerInterceptor } from '../common/interceptors';
 import { UserRole } from './user.constants';
 
 @Controller('users')
-@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -33,6 +32,8 @@ export class UserController {
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(CacheInterceptor)
+  @CacheUser('me')
   async findUserProfile(@Req() request): Promise<User> {
     return this.userService.findById(request.user.id);
   }
@@ -49,6 +50,7 @@ export class UserController {
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(UserRole.admin)
+  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', new ParseIntPipe())
     id,
