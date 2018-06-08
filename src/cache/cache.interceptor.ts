@@ -2,11 +2,15 @@ import { Injectable, NestInterceptor, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
-import { CacheService, Logger } from '../services/index';
+import { Logger } from '../common/services/index';
+import { CacheService } from './cache.service';
+import { CacheUtils } from './cache.utils';
+import { CacheDecoratorOptions } from './cache-decorator-options.interface';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
   constructor(private readonly _cacheService: CacheService,
+    private readonly _cacheUtils: CacheUtils,
     private readonly _logger: Logger, 
     private readonly _reflector: Reflector) {}
 
@@ -15,24 +19,16 @@ export class CacheInterceptor implements NestInterceptor {
     call$: Observable<any>,
   ): Observable<any> {
     const now = Date.now();
-    const userReplace = this._reflector.get<string[]>('userReplace', context.getHandler());
+    const cacheOptions = this._reflector.get<CacheDecoratorOptions>('cacheOptions', context.getHandler());
     const request = context.switchToHttp().getRequest();
-    const path = this._getPath(request, userReplace);
+    const path = this._cacheUtils.getPath(request, cacheOptions.userReplace);
     const key = path + this._sortQuery(request.query);
-
-    console.log('--->', key);
     
     return this._cacheService.get(key)
       .pipe(switchMap(data => data !== undefined ? 
         this._sendCacheRequest(data, request, now) : 
         call$.pipe(tap(data => this._cacheService.set(key, data)))
       ));
-  }
-
-  private _getPath(request, userReplace): string {
-    return request.user && userReplace ? 
-      request.path.replace(userReplace, `${userReplace}_${request.user.id}`) :
-      request.path;
   }
 
   private _sortQuery(query): string {
@@ -46,7 +42,7 @@ export class CacheInterceptor implements NestInterceptor {
   }
 
   private _sendCacheRequest(data, request, startDate): Observable<any> {
-    this._logger.log(`${request.method} [CACHED] ${request.path} ${Date.now() - startDate}ms`);
+    this._logger.log(`[CACHED] ${request.method} ${request.path} ${Date.now() - startDate}ms`);
     return of(data);
   }
 }

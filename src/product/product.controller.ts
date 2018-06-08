@@ -5,11 +5,9 @@ import {
   Put,
   Body,
   UseGuards,
-  ReflectMetadata,
   UseInterceptors,
   Param,
   ParseIntPipe,
-  UseFilters,
   NotFoundException
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,7 +16,7 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/index';
-import { CacheInterceptor } from '../common/interceptors/index';
+import { CacheInterceptor } from '../cache/index';
 import { UserRole } from '../user/user.constants';
 
 @Controller('products')

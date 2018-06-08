@@ -9,14 +9,16 @@ import { CommonModule } from './common/common.module';
 import { AnyExceptionFilter } from './common/filters/index';
 
 // Feature modules
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { CacheModule } from './cache/cache.module';
+import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
-    CommonModule,
     TypeOrmModule.forRoot(),
+    CommonModule,
+    CacheModule,
     UserModule,
     AuthModule,
     ProductModule,

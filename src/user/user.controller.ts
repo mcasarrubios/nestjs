@@ -2,23 +2,22 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   UseGuards,
-  ReflectMetadata,
   UseInterceptors,
   Param,
   Req,
   ParseIntPipe,
-  UseFilters,
   NotFoundException
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserProfileDto } from './dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles, CacheUser } from '../common/decorators';
-import { CacheInterceptor, CacheCleanerInterceptor } from '../common/interceptors';
+import { Roles } from '../common/decorators';
+import { CacheOptions, CacheInterceptor, CacheCleanerInterceptor } from '../cache/index';
 import { UserRole } from './user.constants';
 
 @Controller('users')
@@ -33,9 +32,17 @@ export class UserController {
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(CacheInterceptor)
-  @CacheUser('me')
+  @CacheOptions({userReplace: 'me'})
   async findUserProfile(@Req() request): Promise<User> {
     return this.userService.findById(request.user.id);
+  }
+
+  @Put('me')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(CacheCleanerInterceptor)
+  @CacheOptions({userReplace: 'me'})
+  async updateUserProfile(@Req() request, @Body() updateProfileDto: UpdateUserProfileDto): Promise<User> {
+    return this.userService.updateById(request.user.id, updateProfileDto);
   }
 
   // ADMIN

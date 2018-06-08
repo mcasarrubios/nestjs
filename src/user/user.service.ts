@@ -30,4 +30,8 @@ export class UserService {
   async findOne(user: any): Promise<User> {
     return await this.userRepository.findOne(user);
   }
+
+  async updateById(id: number, data: any): Promise<any> {
+    return await this.userRepository.update(id, data);
+  }
 }

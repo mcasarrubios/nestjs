@@ -4,9 +4,14 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { Product } from './product.entity';
 import { CommonModule } from '../common/common.module';
+import { CacheModule } from '../cache/cache.module';
 
 @Module({
-  imports: [CommonModule, TypeOrmModule.forFeature([Product])],
+  imports: [
+    TypeOrmModule.forFeature([Product]),
+    CommonModule,
+    CacheModule
+  ],
   providers: [ProductService],
   controllers: [ProductController],
 })
