@@ -1,4 +1,6 @@
+interface StringMap { [s: string]: string; }
+
 export interface CacheDecoratorOptions {
     paths?: string[],
-    userReplace?: string
-};
+    placeholders?: StringMap
+}

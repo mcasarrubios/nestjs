@@ -26,12 +26,13 @@ export class AnyExceptionFilter implements ExceptionFilter {
 
     response
       .status(serverError.getStatus())
-      .json(Object.assign({
+      .json({
         timestamp: new Date().toISOString(),
-        path: request.url
-      }, 
-        serverError.getResponse()
-      ));
+        path: request.url,
+        message: serverError.message.error || serverError.message,
+        statusCode: serverError.status,
+        response: serverError.getResponse()
+      });
 
     exception.data = Object.assign({}, exception.data, {
       path: request.url,

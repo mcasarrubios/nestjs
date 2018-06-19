@@ -19,9 +19,10 @@ export class CacheInterceptor implements NestInterceptor {
     call$: Observable<any>,
   ): Observable<any> {
     const now = Date.now();
-    const cacheOptions = this._reflector.get<CacheDecoratorOptions>('cacheOptions', context.getHandler());
+    const cacheOptions = this._reflector.get<CacheDecoratorOptions>('cacheOptions', context.getHandler()) || {};
     const request = context.switchToHttp().getRequest();
-    const path = this._cacheUtils.getPath(request, cacheOptions.userReplace);
+    const params = this._cacheUtils.extendParams(request.params, request.user);
+    const path = this._cacheUtils.getPath(request.path, params, cacheOptions.placeholders);
     const key = path + this._sortQuery(request.query);
     
     return this._cacheService.get(key)

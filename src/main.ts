@@ -12,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new AnyExceptionFilter(errorHandler));
+  app.setGlobalPrefix('v1');
 
   await app.listen(3000);
 }

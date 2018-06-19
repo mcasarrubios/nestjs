@@ -1,6 +1,6 @@
 import { Injectable, NestInterceptor, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable, of } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { CacheService } from './cache.service';
 import { CacheUtils } from './cache.utils';
 import { CacheDecoratorOptions } from './cache-decorator-options.interface';
@@ -16,26 +16,21 @@ export class CacheCleanerInterceptor implements NestInterceptor {
     call$: Observable<any>,
   ): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const cacheOptions = this._reflector.get<CacheDecoratorOptions>('cacheOptions', context.getHandler());
+    const params = this._cacheUtils.extendParams(request.params, request.user);
+    const cacheOptions = this._reflector.get<CacheDecoratorOptions>('cacheOptions', context.getHandler()) || {};
     const paths = cacheOptions.paths && cacheOptions.paths.length > 0 ? 
       cacheOptions.paths : [request.path];
+  
+    const removeKeys: Observable<any> = forkJoin(paths.map(path => {
+      const key = this._cacheUtils.getPath(path, params, cacheOptions.placeholders);
+      return this._cacheService.remove(key);
+    }));
     
-    paths.forEach(path => {
-      const _request = {
-        path: path,
-        user: request.user
-      };
+    removeKeys.subscribe(removedKeys => console.log(`Removed ${removedKeys} keys`))
 
-      const key = this._cacheUtils.getPath(_request, cacheOptions.userReplace);
-      this._cacheService.remove(key);
-    })
-    
     return call$;
   }
 
-  private _getPath(request, userReplace): string {
-    return request.user && userReplace ? 
-      request.path.replace(userReplace, `${userReplace}_${request.user.id}`) :
-      request.path;
-  }
+
+
 }
