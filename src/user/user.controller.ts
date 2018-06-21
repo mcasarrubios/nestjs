@@ -16,6 +16,7 @@ import { CreateUserDto, UpdateUserProfileDto } from './dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CacheOptions, CacheInterceptor, CacheCleanerInterceptor } from '../cache/index';
+import { config } from '../../config/index';
 
 @Controller('users')
 export class UserController {
@@ -38,8 +39,11 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(CacheCleanerInterceptor)
   @CacheOptions({
-    placeholders: {'me': 'userId', ':id': 'id'},
-    paths: ['/me', '/users/:id']
+    placeholders: {'me': 'userId', ':id': 'userId'},
+    paths: [
+      `/${config.apiPath}/${config.adminPath}/users/:id`,
+      `/${config.apiPath}/${config.adminPath}/users?*`
+    ]
   })
   async updateUserProfile(@Req() request, @Body() updateProfileDto: UpdateUserProfileDto): Promise<User> {
     return this.userService.updateById(request.user.id, updateProfileDto);

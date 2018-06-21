@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Observable, of, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CacheService {
@@ -7,36 +8,33 @@ export class CacheService {
     private _store = {};
 
     get(key): Observable<any> {
-        console.log('--GET-->', this._store);
         return of(this._store[key]);
     }
 
     set(key, data): Observable<any> {
         this._store[key] = data
-        console.log('--SET-->', this._store);
         return of(data);
     }
 
     remove(key): Observable<any> {
-        return key.indexOf('*') === -1 ? 
-            of(delete this._store[key]) :
-            this.removeStartWith(key.split('*')[0]);
+        const removedKey: string = this._store[key] != null ? key : null;
+        delete this._store[key];
+        return of(removedKey);
     }
 
     removeStartWith(startStr = ''): Observable<any> {
         if (!startStr) {
           return of();
         }
-    
-        let tasks: Observable<any>[];
-        const keys = Object.keys(this._store);
-        for (const key of keys) {
+
+        let tasks: Observable<any>[] = [];
+        for (const key of Object.keys(this._store)) {
           if (key.indexOf(startStr) === 0) {
             tasks.push(this.remove(key));
           }
         }
 
-        return forkJoin(tasks);
+        return tasks.length > 0 ? forkJoin(tasks) : of([]);
     }
 
     flush(): Observable<any> {

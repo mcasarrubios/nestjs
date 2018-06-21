@@ -19,8 +19,9 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators';
 import { CacheOptions, CacheInterceptor, CacheCleanerInterceptor } from '../cache/index';
 import { UserRole } from './user.constants';
+import { config } from '../../config/index';
 
-@Controller('admin/users')
+@Controller(`${config.adminPath}/users`)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 // @Roles(UserRole.admin)
 export class AdminUserController {
@@ -48,11 +49,13 @@ export class AdminUserController {
   }
 
   @Put(':id')
-  // @UseInterceptors(CacheInterceptor)
   @UseInterceptors(CacheCleanerInterceptor)
   @CacheOptions({
-    placeholders: {'me': 'userId', ':id': 'id'},
-    paths: ['/me', '/users/:id']
+    placeholders: {'me': 'id', ':id': 'id'},
+    paths: [
+      `/${config.apiPath}/users/me`,
+      `/${config.apiPath}/${config.adminPath}/users?*`
+    ]
   })
   async updateUser(
     @Param('id', new ParseIntPipe()) id,
