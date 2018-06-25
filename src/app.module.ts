@@ -1,6 +1,8 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConnectionOptions } from 'typeorm';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { config } from '../config/index';
 import { LoggingInterceptor } from './common/interceptors/index';
 import { AppController } from './app.controller';
 
@@ -16,7 +18,8 @@ import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(<ConnectionOptions>config.databases.sql),
+    TypeOrmModule.forRoot(<ConnectionOptions>config.databases.mongo),
     CommonModule,
     CacheModule,
     AuthModule,

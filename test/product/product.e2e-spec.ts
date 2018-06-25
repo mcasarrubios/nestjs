@@ -2,6 +2,7 @@ import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from '../../config'; 
 import { TransformInterceptor } from '../../src/common/interceptors/index';
 import {
   ProductService,
@@ -19,7 +20,7 @@ describe('ProductModule (e2e)', () => {
       imports: [
         ProductModule,
         testDatabase([Product]),
-        TypeOrmModule.forFeature([Product])
+        TypeOrmModule.forFeature([Product], config.databases.mongo.name),
       ]
     })
       .overrideProvider(ProductService)

@@ -4,7 +4,7 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
-import { Product } from './product.entity';
+import { Product } from './product.entity-mongo';
 
 describe('ProductController', () => {
   let productController: ProductController;
